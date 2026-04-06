@@ -1,28 +1,26 @@
 package main;
-
 import java.util.ArrayList;
 
 public class ProyectoInmobiliario {
     private String codigo;
     private String nombre;
     private int nivelDemanda;
-    private ArrayList<Departamento> listaDepartamentos; 
+    private ArrayList<Propiedad> listaPropiedades; // Ahora acepta Casas y Deptos
 
     public ProyectoInmobiliario(String codigo, String nombre) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.nivelDemanda = 0; 
-        this.listaDepartamentos = new ArrayList<>(); 
+        this.listaPropiedades = new ArrayList<>(); 
     }
 
-    // --- Sobrecarga en ProyectoInmobiliario ---
-    public void agregarDepartamento(Departamento depto) {
-        this.listaDepartamentos.add(depto);
+    public void agregarPropiedad(Propiedad p) {
+        this.listaPropiedades.add(p);
     }
 
-    public void agregarDepartamento(int numero, double metros, double precio) {
-        Departamento nuevo = new Departamento(numero, metros, precio);
-        this.listaDepartamentos.add(nuevo);
+    public void agregarPropiedad(int num, double mts, double precio, int hab, int banos) {
+        Propiedad nueva = new Departamento(num, mts, precio, hab, banos);
+        this.listaPropiedades.add(nueva);
     }
 
     // Getters y Setters
@@ -41,13 +39,13 @@ public class ProyectoInmobiliario {
     public int getNivelDemanda() { 
     	return nivelDemanda; 
     }
-    public void setNivelDemanda(int nivelDemanda) { 
+    public void setNivelDemanda(int nivelDemanda) {
     	this.nivelDemanda = nivelDemanda; 
     }
-    public ArrayList<Departamento> getListaDepartamentos() { 
-    	return listaDepartamentos; 
+    public ArrayList<Propiedad> getListaPropiedades() { 
+    	return listaPropiedades; 
     }
-    public void setListaDepartamentos(ArrayList<Departamento> listaDepartamentos) { 
-    	this.listaDepartamentos = listaDepartamentos; 
+    public void setListaPropiedades(ArrayList<Propiedad> listaPropiedades) { 
+    	this.listaPropiedades = listaPropiedades; 
     }
 }
