@@ -11,7 +11,13 @@ public class SistemaInmobiliaria {
 
     public static void main(String[] args) {
         
-        cargarDatosIniciales();
+    	// --- Carga Batch al inicio ---
+        GestorArchivos.cargarDatos(mapaProyectos);
+        
+        // Opcional: Si el mapa está vacío, cargamos los datos de prueba
+        if (mapaProyectos.isEmpty()) {
+            cargarDatosIniciales();
+        }
 
         String[] opciones = {"Usar Consola", "Usar Ventanas (GUI)"};
         
@@ -291,7 +297,8 @@ public class SistemaInmobiliaria {
                     }
                     break;
                 case 12:
-                    System.out.println("Saliendo del menú de consola...");
+                	GestorArchivos.guardarDatos(mapaProyectos);
+                	System.out.println("Saliendo del menú de consola...");
                     break;
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
@@ -322,7 +329,8 @@ public class SistemaInmobiliaria {
 
             if (seleccion == null || seleccion.equals("12. Salir")) {
                 salir = true;
-                JOptionPane.showMessageDialog(null, "Saliendo del menú de ventanas...");
+                GestorArchivos.guardarDatos(mapaProyectos);
+                JOptionPane.showMessageDialog(null, "Datos guardados. Saliendo del menú de ventanas...");
                 break;
             }
 
