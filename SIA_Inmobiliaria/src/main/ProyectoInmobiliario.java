@@ -5,7 +5,7 @@ public class ProyectoInmobiliario {
     private String codigo;
     private String nombre;
     private int nivelDemanda;
-    private ArrayList<Propiedad> listaPropiedades; // Ahora acepta Casas y Deptos
+    private ArrayList<Propiedad> listaPropiedades;
 
     public ProyectoInmobiliario(String codigo, String nombre) {
         this.codigo = codigo;

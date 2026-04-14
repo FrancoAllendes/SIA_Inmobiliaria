@@ -46,10 +46,13 @@ public class SistemaInmobiliaria {
         ProyectoInmobiliario proyecto2 = new ProyectoInmobiliario("PROY-002", "Condominio Brisas del Mar");
 
         // Agregamos propiedades con los nuevos atributos: num, mts, precio, habitaciones, baños
+        
         Propiedad depto1 = new DepartamentoEstandar(101, 45.5, 2500.0, 2, 1);
         Propiedad depto2 = new DepartamentoEstandar(102, 60.0, 3200.0, 3, 2);
         Propiedad depto3 = new Penthouse(201, 80.5, 4500.0, 4, 3);
+        
         // Agregamos una casa de prueba (al final lleva el boolean del patio)
+        
         Propiedad casa1 = new Casa(1, 120.0, 5000.0, 4, 3, true);
 
         proyecto1.agregarPropiedad(depto1);
@@ -94,15 +97,22 @@ public class SistemaInmobiliaria {
 
             switch (opcion) {
                 case 1:
-                    System.out.print("Ingrese código del nuevo proyecto (Ej: PROY-003): ");
+                	System.out.print("Ingrese código del nuevo proyecto (Ej: PROY-003): ");
                     String codNuevo = scanner.nextLine();
-                    if(mapaProyectos.containsKey(codNuevo)){
-                        System.out.println("Error: Ya existe un proyecto con ese código.");
-                    } else {
+                    
+                    try {
+                        if(mapaProyectos.containsKey(codNuevo)){
+                            
+                            throw new ProyectoDuplicadoException("El código " + codNuevo + " ya está registrado en el sistema.");
+                        } 
+                        
                         System.out.print("Ingrese el nombre del proyecto: ");
                         String nomNuevo = scanner.nextLine();
                         mapaProyectos.put(codNuevo, new ProyectoInmobiliario(codNuevo, nomNuevo));
                         System.out.println("¡Proyecto agregado con éxito!");
+                        
+                    } catch (ProyectoDuplicadoException e) {
+                        System.out.println("ERROR DE NEGOCIO: " + e.getMessage());
                     }
                     break;
                 case 2:
@@ -268,32 +278,41 @@ public class SistemaInmobiliaria {
                     }
                     break;
                 case 11: 
-                    System.out.println("\n--- SIMULADOR DE INVERSIÓN INMOBILIARIA ---");
+                	System.out.println("\n--- SIMULADOR DE INVERSIÓN INMOBILIARIA ---");
                     System.out.print("Ingrese su presupuesto máximo para invertir: $");
                     double presupuesto = scanner.nextDouble();
                     scanner.nextLine();
 
-                    boolean hayOpciones = false;
-                    System.out.println("Buscando oportunidades de inversión rentables...\n");
+                    try {
+                        if (presupuesto <= 0) {
+                            throw new PresupuestoInvalidoException("El presupuesto no puede ser cero o negativo.");
+                        }
 
-                    for (ProyectoInmobiliario proy : mapaProyectos.values()) {
-                        for (Propiedad p : proy.getListaPropiedades()) {
-                            double precioVenta = p.calcularPrecioFinal(proy.getNivelDemanda());
-                            if (precioVenta <= presupuesto) { 
-                                hayOpciones = true;
-                                double arriendoEstimado = precioVenta * 0.005; 
-                                double rentabilidadAnual = (arriendoEstimado * 12) / precioVenta * 100;
+                        boolean hayOpciones = false;
+                        System.out.println("Buscando oportunidades de inversión rentables...\n");
 
-                                System.out.println("Proyecto: " + proy.getNombre() + " | Propiedad N°" + p.getNumero());
-                                System.out.println(" - Precio de Compra: $" + precioVenta);
-                                System.out.println(" - Arriendo mensual sugerido: $" + String.format("%.2f", arriendoEstimado));
-                                System.out.println(" - Rentabilidad Anual estimada: " + String.format("%.1f", rentabilidadAnual) + "%");
-                                System.out.println("--------------------------------------------------");
+                        for (ProyectoInmobiliario proy : mapaProyectos.values()) {
+                            for (Propiedad p : proy.getListaPropiedades()) {
+                                double precioVenta = p.calcularPrecioFinal(proy.getNivelDemanda());
+                                if (precioVenta <= presupuesto) { 
+                                    hayOpciones = true;
+                                    double arriendoEstimado = precioVenta * 0.005; 
+                                    double rentabilidadAnual = (arriendoEstimado * 12) / precioVenta * 100;
+
+                                    System.out.println("Proyecto: " + proy.getNombre() + " | Propiedad N°" + p.getNumero());
+                                    System.out.println(" - Precio de Compra: $" + precioVenta);
+                                    System.out.println(" - Arriendo mensual sugerido: $" + String.format("%.2f", arriendoEstimado));
+                                    System.out.println(" - Rentabilidad Anual estimada: " + String.format("%.1f", rentabilidadAnual) + "%");
+                                    System.out.println("--------------------------------------------------");
+                                }
                             }
                         }
-                    }
-                    if (!hayOpciones) {
-                        System.out.println("No se encontraron propiedades dentro de ese presupuesto.");
+                        if (!hayOpciones) {
+                            System.out.println("No se encontraron propiedades dentro de ese presupuesto.");
+                        }
+                        
+                    } catch (PresupuestoInvalidoException e) {
+                        System.out.println("ERROR FINANCIERO: " + e.getMessage());
                     }
                     break;
                 case 12:
@@ -312,7 +331,7 @@ public class SistemaInmobiliaria {
         String[] opcionesMenu = {
             "1. Agregar Proyecto", "2. Mostrar todos los Proyectos", "3. Buscar Proyecto",
             "4. Editar nombre de Proyecto", "5. Eliminar Proyecto", "6. Agregar Propiedad (Casa/Depto)",
-            "7. Mostrar Propiedades de un Proyecto", "8. Buscar Propiedad", "9. Editar precio de Propiedad",
+            "7. Mostrar Propiedades de un Proyecto", "8. Buscar Propiedad", "9. Editar precio de una Propiedad",
             "10. Eliminar Propiedad", "11. Simulador de Inversión", "12. Salir"
         };
 
