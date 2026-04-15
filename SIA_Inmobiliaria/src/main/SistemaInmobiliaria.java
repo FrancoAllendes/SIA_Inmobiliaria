@@ -335,10 +335,11 @@ public class SistemaInmobiliaria {
 
     public static void iniciarVentanas() {
         String[] opcionesMenu = {
-            "1. Agregar Proyecto", "2. Mostrar todos los Proyectos", "3. Buscar Proyecto",
-            "4. Editar nombre de Proyecto", "5. Eliminar Proyecto", "6. Agregar Propiedad (Casa/Depto)",
-            "7. Mostrar Propiedades de un Proyecto", "8. Buscar Propiedad", "9. Editar precio de una Propiedad",
-            "10. Eliminar Propiedad", "11. Simulador de Inversión", "12. Salir"
+        		"1. Agregar Proyecto", "2. Mostrar todos los Proyectos", "3. Buscar Proyecto",
+                "4. Editar nombre de Proyecto", "5. Eliminar Proyecto", "6. Agregar Propiedad (Casa/Depto)",
+                "7. Mostrar Propiedades de un Proyecto", "8. Buscar Propiedad", "9. Editar precio de Propiedad",
+                "10. Eliminar Propiedad", "11. Simulador de Inversión", 
+                "12. Exportar Reporte a Excel", "13. Salir"
         };
 
         boolean salir = false;
@@ -352,7 +353,7 @@ public class SistemaInmobiliaria {
                     opcionesMenu,
                     opcionesMenu[0]);
 
-            if (seleccion == null || seleccion.equals("12. Salir")) {
+            if (seleccion == null || seleccion.equals("13. Salir")) {
                 salir = true;
                 GestorArchivos.guardarDatos(mapaProyectos);
                 JOptionPane.showMessageDialog(null, "Datos guardados. Saliendo del menú de ventanas...");
@@ -530,7 +531,11 @@ public class SistemaInmobiliaria {
                             JOptionPane.showMessageDialog(null, sb.toString());
                         }
                     }
+                
+                } else if (seleccion.startsWith("12.")) {
+                    GestorArchivos.exportarReporteExcel(mapaProyectos);
                 }
+
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Error de formato: Asegúrese de ingresar solo números donde corresponde.", "Error de Ingreso", JOptionPane.ERROR_MESSAGE);
             } catch (Exception e) {
