@@ -6,11 +6,20 @@ import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Scanner;
 
+/**
+ * Clase de utilidad encargada de la pesistencia de los datos del sistema
+ * Permite leer y escribir la informacion en un archivo CSV tipo sistema bach
+ * * @author Franco Allendes
+ */
+
 public class GestorArchivos {
 
     private static final String NOMBRE_ARCHIVO = "datos_inmobiliaria.csv";
 
-    // --- CARGAR DATOS AL INICIAR ---
+    /**
+     * Lee el arcivo CSV local y reconstruye los proyectos y propiedades en la memoria
+     * * @param mapa El mapa principal del sistema donde se guardan los datos cargados
+     */
     public static void cargarDatos(Map<String, ProyectoInmobiliario> mapa) {
         File archivo = new File(NOMBRE_ARCHIVO);
         if (!archivo.exists()) {

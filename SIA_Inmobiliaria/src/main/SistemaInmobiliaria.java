@@ -5,6 +5,12 @@ import java.util.Map;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 
+/**
+ * Clase principal donde se inicializa el Sistema Inmobiliario
+ * Contiene el menu interactivo para la consola y la interfaz grafica de usario (GUI)
+ * * @author Franco Allendes 
+ */
+
 public class SistemaInmobiliaria {
 
     static Map<String, ProyectoInmobiliario> mapaProyectos = new HashMap<>();

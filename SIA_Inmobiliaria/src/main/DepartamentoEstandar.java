@@ -1,7 +1,23 @@
 package main;
 
+/**
+ * Representa la unidad Habitacional mas comun
+ * Tiene una restrccion logica donde el aumento por demanda no puede superar el tope maximo de $2000
+ * * @author Franco Allendes
+ */
+
 public class DepartamentoEstandar extends Departamento {
-    public DepartamentoEstandar(int numero, double metrosCuadrados, double precioBase, int habitaciones, int banos) {
+    
+	/**
+	 * Constructor para un DepartamentoEstandar
+	 * * @param numero Numero del Departamento
+	 * @param metrosCuadrados Metros cuadrados de la unidad
+	 * @param precioBase Precio base del mercado
+	 * @param habitaciones Numero de dormitorios
+	 * @param banos Numero de baños
+	 */
+	
+	public DepartamentoEstandar(int numero, double metrosCuadrados, double precioBase, int habitaciones, int banos) {
         super(numero, metrosCuadrados, precioBase, habitaciones, banos);
     }
 

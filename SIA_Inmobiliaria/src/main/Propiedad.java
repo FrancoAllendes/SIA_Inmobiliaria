@@ -1,5 +1,11 @@
 package main;
 
+/** 
+ * Clase abstracta que es el ejemplo general de una propiedad dentro del sistema inmobiliario
+ * Funciona como la base de los distintos tipos de propiedades como Casas y Departamentos 
+ * * @author Franco Allendes
+ */
+
 public abstract class Propiedad {
     private int numero;
     private double metrosCuadrados;
@@ -25,7 +31,12 @@ public abstract class Propiedad {
         }
     }
 
-    // Método que los hijos deberán personalizar
+    /**
+     * Calcula el precio final de la venta de una propiedad basnadose en la demanda
+     * Debe ser implementado obligatoriamente por las clases hijas
+     * @param nivelDemanda El nivel de demanda actual del proyecto (int)
+     * @return El valor total calculado para la venta de la propiedad
+     */
     public abstract double calcularPrecioFinal(int nivelDemanda);
 
     // Getters y Setters
