@@ -95,7 +95,8 @@ public class SistemaInmobiliaria {
             System.out.println("10. Eliminar Propiedad");
             System.out.println("--- FUNCIONALIDADES DEL NEGOCIO ---");
             System.out.println("11. Simulador de Inversión");
-            System.out.println("12. Salir");
+            System.out.println("12. Exportar Reporte a Excel");
+            System.out.println("13. Salir");
             System.out.print("Seleccione una opción: ");
 
             opcion = scanner.nextInt();
@@ -103,12 +104,11 @@ public class SistemaInmobiliaria {
 
             switch (opcion) {
                 case 1:
-                	System.out.print("Ingrese código del nuevo proyecto (Ej: PROY-003): ");
+                    System.out.print("Ingrese código del nuevo proyecto (Ej: PROY-003): ");
                     String codNuevo = scanner.nextLine();
                     
-                    try {
+                    try { 
                         if(mapaProyectos.containsKey(codNuevo)){
-                            
                             throw new ProyectoDuplicadoException("El código " + codNuevo + " ya está registrado en el sistema.");
                         } 
                         
@@ -284,7 +284,7 @@ public class SistemaInmobiliaria {
                     }
                     break;
                 case 11: 
-                	System.out.println("\n--- SIMULADOR DE INVERSIÓN INMOBILIARIA ---");
+                    System.out.println("\n--- SIMULADOR DE INVERSIÓN INMOBILIARIA ---");
                     System.out.print("Ingrese su presupuesto máximo para invertir: $");
                     double presupuesto = scanner.nextDouble();
                     scanner.nextLine();
@@ -321,14 +321,20 @@ public class SistemaInmobiliaria {
                         System.out.println("ERROR FINANCIERO: " + e.getMessage());
                     }
                     break;
-                case 12:
-                	GestorArchivos.guardarDatos(mapaProyectos);
-                	System.out.println("Saliendo del menú de consola...");
+                
+                case 12: 
+                    System.out.println("\nGenerando reporte en Excel...");
+                    GestorArchivos.exportarReporteExcel(mapaProyectos);
+                    break;
+                
+                case 13:
+                    GestorArchivos.guardarDatos(mapaProyectos);
+                    System.out.println("Datos guardados. Saliendo del menú de consola...");
                     break;
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
             }
-        } while (opcion != 12);
+        } while (opcion != 13);
 
         scanner.close();
     }
