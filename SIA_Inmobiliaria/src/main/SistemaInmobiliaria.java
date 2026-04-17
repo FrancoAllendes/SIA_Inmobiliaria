@@ -44,7 +44,10 @@ public class SistemaInmobiliaria {
             System.out.println("Carga cancelada por el usuario.");
         }
     }
-
+    
+    // Población de datos "Hardcodeada" para pruebas (Requerimiento SIA-3).
+    // Instancia proyectos y propiedades base (Departamentos, Penthouses y Casas) 
+    // para que el sistema no inicie en blanco y se puedan probar todas las funcionalidades.
     public static void cargarDatosIniciales() {
         System.out.println("Cargando datos iniciales del sistema...");
 
@@ -74,7 +77,10 @@ public class SistemaInmobiliaria {
 
         System.out.println("¡Datos cargados con éxito!");
     }
-
+    
+    // Inicializa y controla el menú principal mediante la consola de comandos (Texto).
+    // Mantiene un ciclo do-while que procesa las entradas del usuario a través de Scanner 
+    // y ejecuta las operaciones CRUD y lógicas del negocio correspondientes.
     public static void iniciarConsola() {
         Scanner scanner = new Scanner(System.in);
         int opcion = 0;
@@ -339,6 +345,9 @@ public class SistemaInmobiliaria {
         scanner.close();
     }
 
+    // Inicializa y controla el menú principal mediante Interfaz Gráfica de Usuario (GUI).
+    // Despliega ventanas emergentes y cuadros de diálogo utilizando la librería JOptionPane, 
+    // manteniendo el flujo de la aplicación hasta que el usuario decida salir y guardar los datos.
     public static void iniciarVentanas() {
         String[] opcionesMenu = {
         		"1. Agregar Proyecto", "2. Mostrar todos los Proyectos", "3. Buscar Proyecto",
