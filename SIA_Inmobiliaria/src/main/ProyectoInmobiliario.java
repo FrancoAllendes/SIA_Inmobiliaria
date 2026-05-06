@@ -37,7 +37,8 @@ public class ProyectoInmobiliario {
      * @param banos cantidad de baños
      */
     public void agregarPropiedad(int num, double mts, double precio, int hab, int banos) {
-        Propiedad nueva = new Departamento(num, mts, precio, hab, banos);
+        // Corrección: Cambiado a DepartamentoEstandar porque Departamento ahora es abstracto
+        Propiedad nueva = new DepartamentoEstandar(num, mts, precio, hab, banos);
         this.listaPropiedades.add(nueva);
     }
 
@@ -61,7 +62,10 @@ public class ProyectoInmobiliario {
     	this.nivelDemanda = nivelDemanda; 
     }
     public ArrayList<Propiedad> getListaPropiedades() { 
-    	return listaPropiedades; 
+    	return new ArrayList<>(listaPropiedades); 
+    }
+    public boolean eliminarPropiedad(int numero) {
+        return this.listaPropiedades.removeIf(p -> p.getNumero() == numero);
     }
     public void setListaPropiedades(ArrayList<Propiedad> listaPropiedades) { 
     	this.listaPropiedades = listaPropiedades; 

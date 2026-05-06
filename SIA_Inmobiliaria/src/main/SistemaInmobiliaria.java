@@ -175,6 +175,20 @@ public class SistemaInmobiliaria {
                         ProyectoInmobiliario proy = mapaProyectos.get(codProyAdd);
                         System.out.print("Ingrese número de la propiedad: ");
                         int num = scanner.nextInt();
+                     // --- validacion para evitar dupliacados ---
+                        boolean existe = false;
+                        for (Propiedad p : proy.getListaPropiedades()) {
+                            if (p.getNumero() == num) {
+                                existe = true;
+                                break;
+                            }
+                        }
+                        
+                        if (existe) {
+                            System.out.println("Error: Ya existe una propiedad con el N°" + num + " en este proyecto.");
+                            break; 
+                        }
+                        
                         System.out.print("Ingrese metros cuadrados: ");
                         double mts = scanner.nextDouble();
                         System.out.print("Ingrese precio base: ");
@@ -188,20 +202,27 @@ public class SistemaInmobiliaria {
                         int tipoProp = scanner.nextInt();
                         scanner.nextLine();
 
-                        Propiedad nuevaPropiedad;
+                        
                         if (tipoProp == 3) {
                             System.out.print("¿Tiene patio? (1 para Sí, 2 para No): ");
                             int opcPatio = scanner.nextInt();
                             scanner.nextLine();
                             boolean tienePatio = (opcPatio == 1);
-                            nuevaPropiedad = new Casa(num, mts, precio, hab, banos, tienePatio);
+                            
+                            // Correccion
+                            Propiedad nuevaPropiedad = new Casa(num, mts, precio, hab, banos, tienePatio);
+                            proy.agregarPropiedad(nuevaPropiedad); 
+                            
                         } else if (tipoProp == 2) {
-                            nuevaPropiedad = new Penthouse(num, mts, precio, hab, banos);
+                            
+                            // Correccion
+                            Propiedad nuevaPropiedad = new Penthouse(num, mts, precio, hab, banos);
+                            proy.agregarPropiedad(nuevaPropiedad); 
+                            
                         } else {
-                            nuevaPropiedad = new DepartamentoEstandar(num, mts, precio, hab, banos);
+                        	//Correccion
+                            proy.agregarPropiedad(num, mts, precio, hab, banos);
                         }
-
-                        proy.agregarPropiedad(nuevaPropiedad);
                         proy.setNivelDemanda(proy.getNivelDemanda() + 1);
                         System.out.println("¡Propiedad agregada exitosamente!");
                     } else {
@@ -253,14 +274,15 @@ public class SistemaInmobiliaria {
                     if (mapaProyectos.containsKey(codEditarProp)) {
                         System.out.print("Ingrese número de la propiedad a editar: ");
                         int numEditar = scanner.nextInt();
-                        System.out.print("Ingrese el nuevo precio base: ");
-                        double nuevoPrecio = scanner.nextDouble();
+                        System.out.print("Ingrese el porcentaje de aumento (ej. 15 para 15%): ");
+                        double porcentaje = scanner.nextDouble();
                         scanner.nextLine();
                         boolean editado = false;
                         
                         for (Propiedad p : mapaProyectos.get(codEditarProp).getListaPropiedades()) {
                             if (p.getNumero() == numEditar) {
-                                p.modificarPrecio(nuevoPrecio); 
+                                // Correccion
+                                p.modificarPrecio(porcentaje, true); 
                                 System.out.println("¡Precio de la propiedad actualizado exitosamente!");
                                 editado = true;
                                 break;
@@ -279,7 +301,7 @@ public class SistemaInmobiliaria {
                         int numEliminar = scanner.nextInt();
                         scanner.nextLine();
                         
-                        boolean borrado = mapaProyectos.get(codElimProp).getListaPropiedades().removeIf(p -> p.getNumero() == numEliminar);
+                        boolean borrado = mapaProyectos.get(codElimProp).eliminarPropiedad(numEliminar);
                         if (borrado) {
                             System.out.println("¡Propiedad eliminada del proyecto!");
                         } else {
@@ -431,6 +453,19 @@ public class SistemaInmobiliaria {
                         ProyectoInmobiliario proy = mapaProyectos.get(codProyAdd);
 
                         int num = Integer.parseInt(JOptionPane.showInputDialog("Ingrese número de la propiedad:"));
+                        // --- Validacion Duplicados ---
+                        boolean existe = false;
+                        for (Propiedad p : proy.getListaPropiedades()) {
+                            if (p.getNumero() == num) {
+                                existe = true;
+                                break;
+                            }
+                        }
+
+                        if (existe) {
+                            JOptionPane.showMessageDialog(null, "Error: Ya existe una propiedad con el N°" + num + " en este proyecto.", "Error", JOptionPane.ERROR_MESSAGE);
+                            continue; // Salta el resto de esta iteración y vuelve a mostrar el menú
+                        }
                         double mts = Double.parseDouble(JOptionPane.showInputDialog("Ingrese metros cuadrados:"));
                         double precio = Double.parseDouble(JOptionPane.showInputDialog("Ingrese precio base:"));
                         int hab = Integer.parseInt(JOptionPane.showInputDialog("Ingrese cantidad de habitaciones:"));
@@ -440,17 +475,21 @@ public class SistemaInmobiliaria {
                         String tipoElegido = (String) JOptionPane.showInputDialog(null, "¿Qué tipo de propiedad es?", "Tipo", JOptionPane.QUESTION_MESSAGE, null, tipos, tipos[0]);
 
                         if (tipoElegido != null) {
-                            Propiedad nuevaPropiedad;
+                            
                             if (tipoElegido.startsWith("3")) {
                                 int patio = JOptionPane.showConfirmDialog(null, "¿Tiene patio?", "Patio", JOptionPane.YES_NO_OPTION);
-                                nuevaPropiedad = new Casa(num, mts, precio, hab, banos, patio == JOptionPane.YES_OPTION);
+                                Propiedad nuevaPropiedad = new Casa(num, mts, precio, hab, banos, patio == JOptionPane.YES_OPTION);
+                                proy.agregarPropiedad(nuevaPropiedad);
+                                
                             } else if (tipoElegido.startsWith("2")) {
-                                nuevaPropiedad = new Penthouse(num, mts, precio, hab, banos);
+                                Propiedad nuevaPropiedad = new Penthouse(num, mts, precio, hab, banos);
+                                proy.agregarPropiedad(nuevaPropiedad);
+                                
                             } else {
-                                nuevaPropiedad = new DepartamentoEstandar(num, mts, precio, hab, banos);
+                                // Correccion
+                                proy.agregarPropiedad(num, mts, precio, hab, banos);
                             }
 
-                            proy.agregarPropiedad(nuevaPropiedad);
                             proy.setNivelDemanda(proy.getNivelDemanda() + 1);
                             JOptionPane.showMessageDialog(null, "¡Propiedad agregada exitosamente!");
                         }
@@ -492,12 +531,13 @@ public class SistemaInmobiliaria {
                 } else if (seleccion.startsWith("9.")) {
                     String codEditarProp = JOptionPane.showInputDialog("Ingrese código del proyecto:");
                     if (codEditarProp != null && mapaProyectos.containsKey(codEditarProp)) {
-                        int numEditar = Integer.parseInt(JOptionPane.showInputDialog("Ingrese número de la propiedad a editar:"));
-                        double nuevoPrecio = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el nuevo precio base:"));
+                    	int numEditar = Integer.parseInt(JOptionPane.showInputDialog("Ingrese número de la propiedad a editar:"));
+                        double porcentaje = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el porcentaje de aumento (ej. 15 para 15%):"));
                         boolean editado = false;
                         for (Propiedad p : mapaProyectos.get(codEditarProp).getListaPropiedades()) {
                             if (p.getNumero() == numEditar) {
-                                p.modificarPrecio(nuevoPrecio);
+                                // Correccion
+                                p.modificarPrecio(porcentaje, true);
                                 JOptionPane.showMessageDialog(null, "¡Precio de la propiedad actualizado exitosamente!");
                                 editado = true;
                                 break;
@@ -511,7 +551,8 @@ public class SistemaInmobiliaria {
                     String codElimProp = JOptionPane.showInputDialog("Ingrese código del proyecto:");
                     if (codElimProp != null && mapaProyectos.containsKey(codElimProp)) {
                         int numEliminar = Integer.parseInt(JOptionPane.showInputDialog("Ingrese número de la propiedad a eliminar:"));
-                        boolean borrado = mapaProyectos.get(codElimProp).getListaPropiedades().removeIf(p -> p.getNumero() == numEliminar);
+                        
+                        boolean borrado = mapaProyectos.get(codElimProp).eliminarPropiedad(numEliminar);
                         if (borrado) {
                             JOptionPane.showMessageDialog(null, "¡Propiedad eliminada del proyecto!");
                         } else {

@@ -6,7 +6,15 @@ package main;
  * * @author Franco Allendes
  */
 
-public class Departamento extends Propiedad {
+/**
+ * CAMBIOS CORRECION
+ * Se define como clase abstracta para fortalecer el diseño de la jerarquía.
+ * Esto evita la instanciación de un "Departamento" genérico, asegurando que solo 
+ * se creen objetos de tipos específicos como DepartamentoEstandar o Penthouse, 
+ * lo que garantiza la integridad del modelo de datos.
+ */
+
+public abstract class Departamento extends Propiedad {
 	
 	/**
 	 * Constructor para la clase departamento
