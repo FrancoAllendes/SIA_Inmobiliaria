@@ -1,9 +1,11 @@
 package main;
 
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
+import java.util.InputMismatchException; // Necesario para capturar errores de escáner
 
 /**
  * Clase principal donde se inicializa el Sistema Inmobiliario
@@ -86,282 +88,294 @@ public class SistemaInmobiliaria {
         int opcion = 0;
 
         do {
-            System.out.println("\n========== MENÚ GESTIÓN INMOBILIARIA ==========");
-            System.out.println("--- GESTIÓN DE PROYECTOS (Colección 1) ---");
-            System.out.println("1. Agregar Proyecto");
-            System.out.println("2. Mostrar todos los Proyectos");
-            System.out.println("3. Buscar Proyecto");
-            System.out.println("4. Editar nombre de Proyecto");
-            System.out.println("5. Eliminar Proyecto");
-            System.out.println("--- GESTIÓN DE PROPIEDADES (Colección 2) ---");
-            System.out.println("6. Agregar Propiedad (Casa/Depto)");
-            System.out.println("7. Mostrar Propiedades de un Proyecto");
-            System.out.println("8. Buscar Propiedad");
-            System.out.println("9. Editar precio de Propiedad");
-            System.out.println("10. Eliminar Propiedad");
-            System.out.println("--- FUNCIONALIDADES DEL NEGOCIO ---");
-            System.out.println("11. Simulador de Inversión");
-            System.out.println("12. Exportar Reporte a Excel");
-            System.out.println("13. Salir");
-            System.out.print("Seleccione una opción: ");
+        	try {
+            	System.out.println("\n========== MENÚ GESTIÓN INMOBILIARIA ==========");
+            	System.out.println("--- GESTIÓN DE PROYECTOS (Colección 1) ---");
+            	System.out.println("1. Agregar Proyecto");
+            	System.out.println("2. Mostrar todos los Proyectos");
+            	System.out.println("3. Buscar Proyecto");
+            	System.out.println("4. Editar nombre de Proyecto");
+            	System.out.println("5. Eliminar Proyecto");
+            	System.out.println("--- GESTIÓN DE PROPIEDADES (Colección 2) ---");
+            	System.out.println("6. Agregar Propiedad (Casa/Depto)");
+            	System.out.println("7. Mostrar Propiedades de un Proyecto");
+            	System.out.println("8. Buscar Propiedad");
+            	System.out.println("9. Editar precio de Propiedad");
+            	System.out.println("10. Eliminar Propiedad");
+            	System.out.println("--- FUNCIONALIDADES DEL NEGOCIO ---");
+            	System.out.println("11. Simulador de Inversión");
+            	System.out.println("12. Exportar Reporte a Excel");
+            	System.out.println("13. Salir");
+            	System.out.print("Seleccione una opción: ");
 
-            opcion = scanner.nextInt();
-            scanner.nextLine(); 
+            	opcion = scanner.nextInt();
+            	scanner.nextLine(); 
 
-            switch (opcion) {
-                case 1:
-                    System.out.print("Ingrese código del nuevo proyecto (Ej: PROY-003): ");
-                    String codNuevo = scanner.nextLine();
+            	switch (opcion) {
+            		case 1:
+            			System.out.print("Ingrese código del nuevo proyecto (Ej: PROY-003): ");
+            			String codNuevo = scanner.nextLine();
                     
-                    try { 
-                        if(mapaProyectos.containsKey(codNuevo)){
-                            throw new ProyectoDuplicadoException("El código " + codNuevo + " ya está registrado en el sistema.");
-                        } 
+            			try { 
+            				if(mapaProyectos.containsKey(codNuevo)){
+            					throw new ProyectoDuplicadoException("El código " + codNuevo + " ya está registrado en el sistema.");
+            				} 
                         
-                        System.out.print("Ingrese el nombre del proyecto: ");
-                        String nomNuevo = scanner.nextLine();
-                        mapaProyectos.put(codNuevo, new ProyectoInmobiliario(codNuevo, nomNuevo));
-                        System.out.println("¡Proyecto agregado con éxito!");
+            				System.out.print("Ingrese el nombre del proyecto: ");
+            				String nomNuevo = scanner.nextLine();
+            				mapaProyectos.put(codNuevo, new ProyectoInmobiliario(codNuevo, nomNuevo));
+            				System.out.println("¡Proyecto agregado con éxito!");
                         
-                    } catch (ProyectoDuplicadoException e) {
-                        System.out.println("ERROR DE NEGOCIO: " + e.getMessage());
-                    }
-                    break;
-                case 2:
-                    System.out.println("\n--- LISTADO DE PROYECTOS ---");
-                    if(mapaProyectos.isEmpty()){
-                        System.out.println("No hay proyectos registrados.");
-                    } else {
-                        for (ProyectoInmobiliario p : mapaProyectos.values()) {
-                            System.out.println("Código: " + p.getCodigo() + " | Nombre: " + p.getNombre() + " | Propiedades: " + p.getListaPropiedades().size());
-                        }
-                    }
-                    break;
-                case 3: 
-                    System.out.print("Ingrese el código del proyecto a buscar: ");
-                    String codBuscar = scanner.nextLine();
-                    if (mapaProyectos.containsKey(codBuscar)) {
-                        ProyectoInmobiliario p = mapaProyectos.get(codBuscar);
-                        System.out.println("Proyecto Encontrado -> Nombre: " + p.getNombre() + " | Demanda actual: " + p.getNivelDemanda());
-                    } else {
-                        System.out.println("Error: Proyecto no encontrado.");
-                    }
-                    break;
-                case 4: 
-                    System.out.print("Ingrese el código del proyecto a editar: ");
-                    String codEditar = scanner.nextLine();
-                    if (mapaProyectos.containsKey(codEditar)) {
-                        System.out.print("Ingrese el nuevo nombre para el proyecto: ");
-                        String nuevoNombre = scanner.nextLine();
-                        mapaProyectos.get(codEditar).setNombre(nuevoNombre);
-                        System.out.println("¡Nombre actualizado exitosamente!");
-                    } else {
-                        System.out.println("Error: Proyecto no encontrado.");
-                    }
-                    break;
-                case 5: 
-                    System.out.print("Ingrese el código del proyecto a eliminar: ");
-                    String codEliminar = scanner.nextLine();
-                    if (mapaProyectos.remove(codEliminar) != null) {
-                        System.out.println("¡Proyecto eliminado del sistema!");
-                    } else {
-                        System.out.println("Error: No se encontró el proyecto para eliminar.");
-                    }
-                    break;
-                case 6:
-                    System.out.print("Ingrese el código del proyecto: ");
-                    String codProyAdd = scanner.nextLine();
-                    if (mapaProyectos.containsKey(codProyAdd)) {
-                        ProyectoInmobiliario proy = mapaProyectos.get(codProyAdd);
-                        System.out.print("Ingrese número de la propiedad: ");
-                        int num = scanner.nextInt();
-                     // --- validacion para evitar dupliacados ---
-                        boolean existe = false;
-                        for (Propiedad p : proy.getListaPropiedades()) {
-                            if (p.getNumero() == num) {
-                                existe = true;
-                                break;
-                            }
-                        }
+            			} catch (ProyectoDuplicadoException e) {
+            				System.out.println("ERROR DE NEGOCIO: " + e.getMessage());
+            			}
+            			break;
+            		case 2:
+            			System.out.println("\n--- LISTADO DE PROYECTOS ---");
+            			if(mapaProyectos.isEmpty()){
+            				System.out.println("No hay proyectos registrados.");
+            			} else {
+            				for (ProyectoInmobiliario p : mapaProyectos.values()) {
+            					System.out.println("Código: " + p.getCodigo() + " | Nombre: " + p.getNombre() + " | Propiedades: " + p.getListaPropiedades().size());
+            				}
+            			}
+            			break;
+            		case 3: 
+            			System.out.print("Ingrese el código del proyecto a buscar: ");
+            			String codBuscar = scanner.nextLine();
+            			if (mapaProyectos.containsKey(codBuscar)) {
+            				ProyectoInmobiliario p = mapaProyectos.get(codBuscar);
+            				System.out.println("Proyecto Encontrado -> Nombre: " + p.getNombre() + " | Demanda actual: " + p.getNivelDemanda());
+            			} else {
+            				System.out.println("Error: Proyecto no encontrado.");
+            			}
+            			break;
+            		case 4: 
+            			System.out.print("Ingrese el código del proyecto a editar: ");
+            			String codEditar = scanner.nextLine();
+            			if (mapaProyectos.containsKey(codEditar)) {
+            				System.out.print("Ingrese el nuevo nombre para el proyecto: ");
+            				String nuevoNombre = scanner.nextLine();
+            				mapaProyectos.get(codEditar).setNombre(nuevoNombre);
+            				System.out.println("¡Nombre actualizado exitosamente!");
+            			} else {
+            				System.out.println("Error: Proyecto no encontrado.");
+            			}
+            			break;
+            		case 5: 
+            			System.out.print("Ingrese el código del proyecto a eliminar: ");
+            			String codEliminar = scanner.nextLine();
+            			if (mapaProyectos.remove(codEliminar) != null) {
+            				System.out.println("¡Proyecto eliminado del sistema!");
+            			} else {
+            				System.out.println("Error: No se encontró el proyecto para eliminar.");
+            			}
+            			break;
+            		case 6:
+            			System.out.print("Ingrese el código del proyecto: ");
+            			String codProyAdd = scanner.nextLine();
+            			if (mapaProyectos.containsKey(codProyAdd)) {
+            				ProyectoInmobiliario proy = mapaProyectos.get(codProyAdd);
+            				System.out.print("Ingrese número de la propiedad: ");
+            				int num = scanner.nextInt();
+            				// --- validacion para evitar dupliacados ---
+            				boolean existe = false;
+            				for (Propiedad p : proy.getListaPropiedades()) {
+            					if (p.getNumero() == num) {
+            						existe = true;
+            						break;
+            					}
+            				}
                         
-                        if (existe) {
-                            System.out.println("Error: Ya existe una propiedad con el N°" + num + " en este proyecto.");
-                            break; 
-                        }
+            				if (existe) {
+            					System.out.println("Error: Ya existe una propiedad con el N°" + num + " en este proyecto.");
+            					break; 
+            				}
                         
-                        System.out.print("Ingrese metros cuadrados: ");
-                        double mts = scanner.nextDouble();
-                        System.out.print("Ingrese precio base: ");
-                        double precio = scanner.nextDouble();
-                        System.out.print("Ingrese cantidad de habitaciones: ");
-                        int hab = scanner.nextInt();
-                        System.out.print("Ingrese cantidad de baños: ");
-                        int banos = scanner.nextInt();
+            				System.out.print("Ingrese metros cuadrados: ");
+            				double mts = scanner.nextDouble();
+            				System.out.print("Ingrese precio base: ");
+            				double precio = scanner.nextDouble();
+            				System.out.print("Ingrese cantidad de habitaciones: ");
+            				int hab = scanner.nextInt();
+            				System.out.print("Ingrese cantidad de baños: ");
+            				int banos = scanner.nextInt();
 
-                        System.out.println("¿Qué tipo de propiedad es? (1. Depto Estándar | 2. Penthouse | 3. Casa): ");
-                        int tipoProp = scanner.nextInt();
-                        scanner.nextLine();
+            				System.out.println("¿Qué tipo de propiedad es? (1. Depto Estándar | 2. Penthouse | 3. Casa): ");
+            				int tipoProp = scanner.nextInt();
+            				scanner.nextLine();
 
                         
-                        if (tipoProp == 3) {
-                            System.out.print("¿Tiene patio? (1 para Sí, 2 para No): ");
-                            int opcPatio = scanner.nextInt();
-                            scanner.nextLine();
-                            boolean tienePatio = (opcPatio == 1);
+            				if (tipoProp == 3) {
+            					System.out.print("¿Tiene patio? (1 para Sí, 2 para No): ");
+            					int opcPatio = scanner.nextInt();
+            					scanner.nextLine();
+            					boolean tienePatio = (opcPatio == 1);
                             
-                            // Correccion
-                            Propiedad nuevaPropiedad = new Casa(num, mts, precio, hab, banos, tienePatio);
-                            proy.agregarPropiedad(nuevaPropiedad); 
+            					// Correccion
+            					Propiedad nuevaPropiedad = new Casa(num, mts, precio, hab, banos, tienePatio);
+            					proy.agregarPropiedad(nuevaPropiedad); 
                             
-                        } else if (tipoProp == 2) {
+            				} else if (tipoProp == 2) {
                             
-                            // Correccion
-                            Propiedad nuevaPropiedad = new Penthouse(num, mts, precio, hab, banos);
-                            proy.agregarPropiedad(nuevaPropiedad); 
+            					// Correccion
+            					Propiedad nuevaPropiedad = new Penthouse(num, mts, precio, hab, banos);
+            					proy.agregarPropiedad(nuevaPropiedad); 
                             
-                        } else {
-                        	//Correccion
-                            proy.agregarPropiedad(num, mts, precio, hab, banos);
-                        }
-                        proy.setNivelDemanda(proy.getNivelDemanda() + 1);
-                        System.out.println("¡Propiedad agregada exitosamente!");
-                    } else {
-                        System.out.println("Error: Proyecto no encontrado.");
-                    }
-                    break;
-                case 7:
-                    System.out.print("Ingrese código del proyecto para ver sus propiedades: ");
-                    String codVer = scanner.nextLine();
-                    if (mapaProyectos.containsKey(codVer)) {
-                        ProyectoInmobiliario proy = mapaProyectos.get(codVer);
-                        if (proy.getListaPropiedades().isEmpty()) {
-                            System.out.println("No hay propiedades en este proyecto.");
-                        } else {
-                            System.out.println("\n--- PROPIEDADES DE " + proy.getNombre() + " ---");
-                            for (Propiedad p : proy.getListaPropiedades()) {
-                                double pFinal = p.calcularPrecioFinal(proy.getNivelDemanda());
-                                System.out.println("N°" + p.getNumero() + " | " + p.getHabitaciones() + " Hab / " + p.getBanos() + " Baños | Área: " + p.getMetrosCuadrados() + " | Precio Venta: $" + pFinal);
-                            }
-                        }
-                    } else {
-                        System.out.println("Error: Proyecto no encontrado.");
-                    }
-                    break;
-                case 8: 
-                    System.out.print("Ingrese código del proyecto: ");
-                    String codBuscarProp = scanner.nextLine();
-                    if (mapaProyectos.containsKey(codBuscarProp)) {
-                        System.out.print("Ingrese número de la propiedad a buscar: ");
-                        int numBuscado = scanner.nextInt();
-                        scanner.nextLine();
-                        boolean encontrado = false;
+            				} else {
+            					//Correccion
+            					proy.agregarPropiedad(num, mts, precio, hab, banos);
+            				}
+            				proy.setNivelDemanda(proy.getNivelDemanda() + 1);
+            				System.out.println("¡Propiedad agregada exitosamente!");
+            			} else {
+            				System.out.println("Error: Proyecto no encontrado.");
+            			}
+            			break;
+            		case 7:
+            			System.out.print("Ingrese código del proyecto para ver sus propiedades: ");
+            			String codVer = scanner.nextLine();
+            			if (mapaProyectos.containsKey(codVer)) {
+            				ProyectoInmobiliario proy = mapaProyectos.get(codVer);
+            				if (proy.getListaPropiedades().isEmpty()) {
+            					System.out.println("No hay propiedades en este proyecto.");
+            				} else {
+            					System.out.println("\n--- PROPIEDADES DE " + proy.getNombre() + " ---");
+            					for (Propiedad p : proy.getListaPropiedades()) {
+            						double pFinal = p.calcularPrecioFinal(proy.getNivelDemanda());
+            						System.out.println("N°" + p.getNumero() + " | " + p.getHabitaciones() + " Hab / " + p.getBanos() + " Baños | Área: " + p.getMetrosCuadrados() + " | Precio Venta: $" + pFinal);
+            					}
+            				}
+            			} else {
+            				System.out.println("Error: Proyecto no encontrado.");
+            			}
+            			break;
+            		case 8: 
+            			System.out.print("Ingrese código del proyecto: ");
+            			String codBuscarProp = scanner.nextLine();
+            			if (mapaProyectos.containsKey(codBuscarProp)) {
+            				System.out.print("Ingrese número de la propiedad a buscar: ");
+            				int numBuscado = scanner.nextInt();
+            				scanner.nextLine();
+            				boolean encontrado = false;
                         
-                        for (Propiedad p : mapaProyectos.get(codBuscarProp).getListaPropiedades()) {
-                            if (p.getNumero() == numBuscado) {
-                                System.out.println("Propiedad Encontrada -> Área: " + p.getMetrosCuadrados() + " m2 | Habitaciones: " + p.getHabitaciones() + " | Precio Base: $" + p.getPrecioBase());
-                                encontrado = true;
-                                break;
-                            }
-                        }
-                        if(!encontrado) System.out.println("Error: Propiedad no existe en este proyecto.");
-                    } else {
-                        System.out.println("Error: Proyecto no encontrado.");
-                    }
-                    break;
-                case 9: 
-                    System.out.print("Ingrese código del proyecto: ");
-                    String codEditarProp = scanner.nextLine();
-                    if (mapaProyectos.containsKey(codEditarProp)) {
-                        System.out.print("Ingrese número de la propiedad a editar: ");
-                        int numEditar = scanner.nextInt();
-                        System.out.print("Ingrese el porcentaje de aumento (ej. 15 para 15%): ");
-                        double porcentaje = scanner.nextDouble();
-                        scanner.nextLine();
-                        boolean editado = false;
+            				for (Propiedad p : mapaProyectos.get(codBuscarProp).getListaPropiedades()) {
+            					if (p.getNumero() == numBuscado) {
+            						System.out.println("Propiedad Encontrada -> Área: " + p.getMetrosCuadrados() + " m2 | Habitaciones: " + p.getHabitaciones() + " | Precio Base: $" + p.getPrecioBase());
+            						encontrado = true;
+            						break;
+            					}
+            				}
+            				if(!encontrado) System.out.println("Error: Propiedad no existe en este proyecto.");
+            			} else {
+            				System.out.println("Error: Proyecto no encontrado.");
+            			}
+            			break;
+            		case 9: 
+            			System.out.print("Ingrese código del proyecto: ");
+            			String codEditarProp = scanner.nextLine();
+            			if (mapaProyectos.containsKey(codEditarProp)) {
+            				System.out.print("Ingrese número de la propiedad a editar: ");
+            				int numEditar = scanner.nextInt();
+            				System.out.print("Ingrese el porcentaje de aumento (ej. 15 para 15%): ");
+            				double porcentaje = scanner.nextDouble();
+            				scanner.nextLine();
+            				boolean editado = false;
                         
-                        for (Propiedad p : mapaProyectos.get(codEditarProp).getListaPropiedades()) {
-                            if (p.getNumero() == numEditar) {
-                                // Correccion
-                                p.modificarPrecio(porcentaje, true); 
-                                System.out.println("¡Precio de la propiedad actualizado exitosamente!");
-                                editado = true;
-                                break;
-                            }
-                        }
-                        if(!editado) System.out.println("Error: Propiedad no encontrada.");
-                    } else {
-                        System.out.println("Error: Proyecto no encontrado.");
-                    }
-                    break;
-                case 10: 
-                    System.out.print("Ingrese código del proyecto: ");
-                    String codElimProp = scanner.nextLine();
-                    if (mapaProyectos.containsKey(codElimProp)) {
-                        System.out.print("Ingrese número de la propiedad a eliminar: ");
-                        int numEliminar = scanner.nextInt();
-                        scanner.nextLine();
+            				for (Propiedad p : mapaProyectos.get(codEditarProp).getListaPropiedades()) {
+            					if (p.getNumero() == numEditar) {
+            						// Correccion
+            						p.modificarPrecio(porcentaje, true); 
+            						System.out.println("¡Precio de la propiedad actualizado exitosamente!");
+            						editado = true;
+            						break;
+            					}
+            				}
+            				if(!editado) System.out.println("Error: Propiedad no encontrada.");
+                	   } else {
+                		   System.out.println("Error: Proyecto no encontrado.");
+                	   }
+            			break;
+            		case 10: 
+            			System.out.print("Ingrese código del proyecto: ");
+            			String codElimProp = scanner.nextLine();
+            			if (mapaProyectos.containsKey(codElimProp)) {
+            				System.out.print("Ingrese número de la propiedad a eliminar: ");
+            				int numEliminar = scanner.nextInt();
+            				scanner.nextLine();
                         
-                        boolean borrado = mapaProyectos.get(codElimProp).eliminarPropiedad(numEliminar);
-                        if (borrado) {
-                            System.out.println("¡Propiedad eliminada del proyecto!");
-                        } else {
-                            System.out.println("Error: No se encontró la propiedad.");
-                        }
-                    } else {
-                        System.out.println("Error: Proyecto no encontrado.");
-                    }
-                    break;
-                case 11: 
-                    System.out.println("\n--- SIMULADOR DE INVERSIÓN INMOBILIARIA ---");
-                    System.out.print("Ingrese su presupuesto máximo para invertir: $");
-                    double presupuesto = scanner.nextDouble();
-                    scanner.nextLine();
+            				boolean borrado = mapaProyectos.get(codElimProp).eliminarPropiedad(numEliminar);
+            				if (borrado) {
+            					System.out.println("¡Propiedad eliminada del proyecto!");
+            				} else {
+            					System.out.println("Error: No se encontró la propiedad.");
+            				}
+            			} else {
+            				System.out.println("Error: Proyecto no encontrado.");
+            			}
+            			break;
+            		case 11: 
+            			System.out.println("\n--- SIMULADOR DE INVERSIÓN INMOBILIARIA ---");
+            			System.out.print("Ingrese su presupuesto máximo para invertir: $");
+                	   double presupuesto = scanner.nextDouble();
+                	   scanner.nextLine();
 
-                    try {
-                        if (presupuesto <= 0) {
-                            throw new PresupuestoInvalidoException("El presupuesto no puede ser cero o negativo.");
-                        }
+                	   try {
+                		   if (presupuesto <= 0) {
+                			   throw new PresupuestoInvalidoException("El presupuesto no puede ser cero o negativo.");
+                		   }
 
-                        boolean hayOpciones = false;
-                        System.out.println("Buscando oportunidades de inversión rentables...\n");
+                		   boolean hayOpciones = false;
+                		   System.out.println("Buscando oportunidades de inversión rentables...\n");
 
-                        for (ProyectoInmobiliario proy : mapaProyectos.values()) {
-                            for (Propiedad p : proy.getListaPropiedades()) {
-                                double precioVenta = p.calcularPrecioFinal(proy.getNivelDemanda());
-                                if (precioVenta <= presupuesto) { 
-                                    hayOpciones = true;
-                                    double arriendoEstimado = precioVenta * 0.005; 
-                                    double rentabilidadAnual = (arriendoEstimado * 12) / precioVenta * 100;
+                		   for (ProyectoInmobiliario proy : mapaProyectos.values()) {
+                			   for (Propiedad p : proy.getListaPropiedades()) {
+                				   double precioVenta = p.calcularPrecioFinal(proy.getNivelDemanda());
+                				   if (precioVenta <= presupuesto) { 
+                					   hayOpciones = true;
+                					   double arriendoEstimado = precioVenta * 0.005; 
+                					   double rentabilidadAnual = (arriendoEstimado * 12) / precioVenta * 100;
 
-                                    System.out.println("Proyecto: " + proy.getNombre() + " | Propiedad N°" + p.getNumero());
-                                    System.out.println(" - Precio de Compra: $" + precioVenta);
-                                    System.out.println(" - Arriendo mensual sugerido: $" + String.format("%.2f", arriendoEstimado));
-                                    System.out.println(" - Rentabilidad Anual estimada: " + String.format("%.1f", rentabilidadAnual) + "%");
-                                    System.out.println("--------------------------------------------------");
-                                }
-                            }
-                        }
-                        if (!hayOpciones) {
-                            System.out.println("No se encontraron propiedades dentro de ese presupuesto.");
-                        }
+                					   System.out.println("Proyecto: " + proy.getNombre() + " | Propiedad N°" + p.getNumero());
+                					   System.out.println(" - Precio de Compra: $" + precioVenta);
+                					   System.out.println(" - Arriendo mensual sugerido: $" + String.format("%.2f", arriendoEstimado));
+                					   System.out.println(" - Rentabilidad Anual estimada: " + String.format("%.1f", rentabilidadAnual) + "%");
+                					   System.out.println("--------------------------------------------------");
+                				   }
+                			   }
+                		   }
+                		   if (!hayOpciones) {
+                			   System.out.println("No se encontraron propiedades dentro de ese presupuesto.");
+                		   }
                         
-                    } catch (PresupuestoInvalidoException e) {
-                        System.out.println("ERROR FINANCIERO: " + e.getMessage());
-                    }
-                    break;
+                	   } catch (PresupuestoInvalidoException e) {
+                		   System.out.println("ERROR FINANCIERO: " + e.getMessage());
+                	   }
+                	   break;
                 
-                case 12: 
-                    System.out.println("\nGenerando reporte en Excel...");
-                    GestorArchivos.exportarReporteExcel(mapaProyectos);
-                    break;
+            		case 12: 
+            			System.out.println("\nGenerando reporte en Excel...");
+            			GestorArchivos.exportarReporteExcel(mapaProyectos);
+            			break;
                 
-                case 13:
-                    GestorArchivos.guardarDatos(mapaProyectos);
-                    System.out.println("Datos guardados. Saliendo del menú de consola...");
-                    break;
-                default:
-                    System.out.println("Opción no válida. Intente nuevamente.");
-            }
+            		case 13:
+            			GestorArchivos.guardarDatos(mapaProyectos);
+            			System.out.println("Datos guardados. Saliendo del menú de consola...");
+            			break;
+            		default:
+            			System.out.println("Opción no válida. Intente nuevamente.");
+            	}
+        } catch (InputMismatchException e) {
+            // CORRECCIÓN SIA-12: Captura ingresos de texto donde se esperan números
+        	System.out.println("Error: ¡Debes ingresar un valor numérico válido!");
+           scanner.nextLine(); // Limpia el buffer para evitar el bucle infinito
+           opcion = 0; 
+       } catch (Exception e) {
+    	   System.out.println("Error inesperado: " + e.getMessage());
+           scanner.nextLine();
+           opcion = 0;
+        	
+       		}
         } while (opcion != 13);
 
         scanner.close();

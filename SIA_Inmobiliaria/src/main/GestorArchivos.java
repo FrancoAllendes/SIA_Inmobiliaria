@@ -101,13 +101,13 @@ public class GestorArchivos {
     }
  // --- Generación de archivo de planilla de cálculo ---
     public static void exportarReporteExcel(Map<String, ProyectoInmobiliario> mapaProyectos) {
-        String nombreArchivo = "Reporte_Inversiones.csv";
+        // CAMBIO
+        String nombreArchivo = "Reporte_Inversiones.xls";
         
         try (PrintWriter escritor = new PrintWriter(new FileWriter(nombreArchivo))) {
-            // Escribimos los encabezados de las columnas para Excel
-            escritor.println("Proyecto;Tipo Propiedad;Nro Propiedad;Metros Cuadrados;Precio Compra;Arriendo Sugerido;Rentabilidad Anual (%)");
+            // Usamos tabulaciones (\t) para que Excel lo abra correctamente como celdas
+            escritor.println("Proyecto\tTipo Propiedad\tNro Propiedad\tMetros Cuadrados\tPrecio Compra\tArriendo Sugerido\tRentabilidad Anual (%)");
 
-            // Llenamos las filas con los cálculos matemáticos
             for (ProyectoInmobiliario p : mapaProyectos.values()) {
                 for (Propiedad prop : p.getListaPropiedades()) {
                     double precioVenta = prop.calcularPrecioFinal(p.getNivelDemanda());
@@ -118,16 +118,15 @@ public class GestorArchivos {
                     if (prop instanceof Casa) tipo = "Casa";
                     else if (prop instanceof Penthouse) tipo = "Penthouse";
 
-                    // Reemplazamos las comas por puntos en los decimales para que Excel no se confunda de columna
                     String arriendoStr = String.format("%.2f", arriendoEstimado).replace(",", ".");
                     String rentaStr = String.format("%.1f", rentabilidadAnual).replace(",", ".");
 
-                    // Escribimos la fila completa
-                    escritor.println(p.getNombre() + ";" + tipo + ";" + prop.getNumero() + ";" +
-                            prop.getMetrosCuadrados() + ";" + precioVenta + ";" + arriendoStr + ";" + rentaStr);
+                    // Separamos por tabulaciones (\t) en lugar de punto y coma
+                    escritor.println(p.getNombre() + "\t" + tipo + "\t" + prop.getNumero() + "\t" +
+                            prop.getMetrosCuadrados() + "\t" + precioVenta + "\t" + arriendoStr + "\t" + rentaStr);
                 }
             }
-            javax.swing.JOptionPane.showMessageDialog(null, "¡Reporte exportado a Excel (" + nombreArchivo + ") con éxito!");
+            javax.swing.JOptionPane.showMessageDialog(null, "¡Reporte exportado a Excel con éxito!");
         } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(null, "Error al exportar: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
